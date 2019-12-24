@@ -16,5 +16,9 @@ urlpatterns = [
     path('my-cat/', views.cat_image_view),
     path('csv-file/', views.cvs_file_view),
     path('json-file/', views.json_view),
-    path('streaming-view/', views.streaming_view)
+    path('streaming-view/', views.streaming_view),
+
+    path('blog-post/', views.recent_blog_posts, name='recent_posts'),
+    path('blog-post/<int:blog_post_id>/', views.blog_post_view, name='blog_post'),
+    path('add-blog-post/', views.add_blog_post)
 ]

@@ -1,0 +1,11 @@
+{% if recent_blog_posts %}
+    <ul>
+        {% for blog_post in recent_blog_posts  %}
+            <a href={% url 'blog_post' blog_post.id %}>
+                <li> {{ blog_post.title }} </li>
+            </a>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>There are now blog posts yet</p>
+{% endif %}

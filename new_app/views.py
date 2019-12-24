@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from time import sleep
 from django.http import HttpResponse, FileResponse, JsonResponse, StreamingHttpResponse
 import datetime
 from django.views.decorators.csrf import csrf_exempt
+from new_app.models import BlogPost
 
 @csrf_exempt
 def my_first_view(request):
@@ -61,3 +62,26 @@ def streaming_view(request):
     response = StreamingHttpResponse(streaming_writer(1000000), content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="data.csv"'
     return response
+
+
+def recent_blog_posts(request):
+    blog_posts = \
+        BlogPost.objects.all().order_by('-date_published')[:5]
+    
+    return render(request, 'blog_posts.html', 
+        {'recent_blog_posts': blog_posts})
+
+
+def blog_post_view(request, blog_post_id):
+    blog_post = BlogPost.objects.get(id=blog_post_id)
+    return render(request, 'blog_post_page.html', 
+        {'blog_post': blog_post})
+
+def add_blog_post(request):
+    if request.method == 'POST':
+        blog_post = BlogPost.objects.create(
+            title=request.POST['title'],
+            content=request.POST['content']
+        )
+        return redirect('/blog-post/')
+    return render(request, 'add_blog_post.html')
