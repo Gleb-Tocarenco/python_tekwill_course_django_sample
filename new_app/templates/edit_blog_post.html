@@ -1,0 +1,8 @@
+<p>Edit blog# {{blog_post.id}}</p>
+<form method='post'>
+    {% csrf_token %}
+    {{ edit_form.as_p }}
+    <input type='submit' value='Edit'>
+</form>
+</br>
+<a href="/blog-post/{{blog_post.id}}">Back</a>

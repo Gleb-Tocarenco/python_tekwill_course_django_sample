@@ -1,9 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from time import sleep
 from django.http import HttpResponse, FileResponse, JsonResponse, StreamingHttpResponse
 import datetime
 from django.views.decorators.csrf import csrf_exempt
 from new_app.models import BlogPost
+from new_app.forms import BlogPostForm
+from django.urls import reverse
+
 
 @csrf_exempt
 def my_first_view(request):
@@ -78,10 +81,26 @@ def blog_post_view(request, blog_post_id):
         {'blog_post': blog_post})
 
 def add_blog_post(request):
+    if request.method == 'GET':
+        form = BlogPostForm()
+        return render(request, 'add_blog_post.html', {'form': form})
     if request.method == 'POST':
-        blog_post = BlogPost.objects.create(
-            title=request.POST['title'],
-            content=request.POST['content']
-        )
-        return redirect('/blog-post/')
-    return render(request, 'add_blog_post.html')
+        form = BlogPostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/blog-post/')
+        return render(request, 'add_blog_post.html', {'form': form})
+
+
+def edit_blog_post(request, blog_post_id):
+    blog_post = get_object_or_404(BlogPost, id=blog_post_id)
+    if request.method == 'POST':
+        print(request.POST)
+        edit_form = BlogPostForm(request.POST, instance=blog_post)
+        if edit_form.is_valid():
+            edit_form.save()
+            return redirect(reverse(blog_post_view, args=(blog_post.id, )))
+        return render(request, 'edit_blog_post.html', {'edit_form': edit_form})
+    if request.method == 'GET':
+        edit_form = BlogPostForm(instance=blog_post)
+        return render(request, 'edit_blog_post.html', {'edit_form': edit_form})

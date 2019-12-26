@@ -20,5 +20,7 @@ urlpatterns = [
 
     path('blog-post/', views.recent_blog_posts, name='recent_posts'),
     path('blog-post/<int:blog_post_id>/', views.blog_post_view, name='blog_post'),
-    path('add-blog-post/', views.add_blog_post)
+    path('add-blog-post/', views.add_blog_post, name='add_blog_post'),
+    path('edit-blog-post/<int:blog_post_id>/', views.edit_blog_post, 
+    name='edit_blog_post')
 ]
