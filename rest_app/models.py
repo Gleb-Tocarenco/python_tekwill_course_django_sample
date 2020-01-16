@@ -8,5 +8,7 @@ class FancyCat(models.Model):
     is_active = models.BooleanField(default=True)
     description = models.TextField(default='', blank=True)
 
+    def get_cat(self):
+        return f'{self.name} - {self.age}'
     class Meta:
         ordering = ('date_added', )
